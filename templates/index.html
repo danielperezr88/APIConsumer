@@ -1,0 +1,24 @@
+{% extends "main_template.html" %}
+{% block content %}
+  <header>
+    <h1>API Test Bench</h1>
+    <ul id="nav">
+        {% if not session.logged_in %}
+        <li><a href="{{ url_for('login') }}">log in</a>
+        {% else %}
+        <li><a href="{{ url_for('test_api') }}">test api</a></li>
+        <li><a href="{{ url_for('logout') }}">log out</a></li>
+        {% endif %}
+    </ul>
+  </header>
+  <div id="flash-msg">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash{{ ' '+category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+  {% block body %}{% endblock %}
+{% endblock %}
