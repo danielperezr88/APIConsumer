@@ -21,7 +21,7 @@
       $(document).ready(function() {
         $('form#api-test-form').submit(function(event) {
           $.ajax({
-            url: "http://localhost:88/api/infer",
+            url: "http://{{ IP }}:88/api/infer",
             type : "POST",
             data: {'image': $('form#api-test-form > input[name=url]').val()},
             dataType : "json",

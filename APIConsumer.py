@@ -93,7 +93,7 @@ def login():
 @app.route('/test_api', methods=['GET'])
 def test_api():
     no_impostors_wanted()
-    return render_template('test_api.html')
+    return render_template('test_api.html', IP=MYIP)
 
 if __name__ == '__main__':
     run()
