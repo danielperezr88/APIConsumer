@@ -5,7 +5,7 @@
       <div id="form-inner-wrapper">
         <h2>Test API</h2>
         {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-        <form id="api-test-form" action="{{ url_for('streampeek') }}" method=post>
+        <form id="api-test-form" action="{{ url_for('test_api') }}" method=post>
             <dl>
               <dt>URL:
               <dd><input type=text name=url>
