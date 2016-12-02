@@ -23,7 +23,7 @@
           $.post("http://{{ IP }}:88/api/infer",
                   JSON.stringify({image: $('form#api-test-form').find('input').eq(0).val()}),
                   function(data){
-                    var obj = dat["data"];
+                    var obj = data["data"];
                     res = $('<div\>').append($('<ul\>'));
                     for (var key in obj){
                       res.find('ul').append($('<li\>').append($('<div\>').append($('<h4\>').append(key+': ')).html()+obj[key]));
