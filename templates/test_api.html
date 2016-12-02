@@ -20,20 +20,17 @@
     <script type="text/javascript" charset="utf-8">
       $(document).ready(function() {
         $('form#api-test-form').submit(function(event) {
-          $.ajax({
-            url: "http://{{ IP }}:88/api/infer",
-            type : "POST",
-            data: {'image': $('form#api-test-form > input[name=url]').val()},
-            dataType : "json",
-            success: function(data){
-              var obj = $.parseJSON(data["data"]);
-              res = $('<div\>').append($('<ul\>'));
-              for (var key in obj){
-                res.find('ul').append($('<li\>').append($('<h4\>').append(key).html()+': '+obj[key]).html());
-              }
-              $('#result').html(res.html());
-            }
-          });
+          $.post("http://{{ IP }}:88/api/infer",
+                  JSON.stringify({image: $('form#api-test-form').find('input').eq(0).val()}),
+                  function(data){
+                    var obj = dat["data"];
+                    res = $('<div\>').append($('<ul\>'));
+                    for (var key in obj){
+                      res.find('ul').append($('<li\>').append($('<div\>').append($('<h4\>').append(key+': ')).html()+obj[key]));
+                    }
+                    $('#result').html(res.html());
+                  }
+          );
           return false;
         });
       });
