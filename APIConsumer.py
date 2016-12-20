@@ -8,7 +8,7 @@ from binascii import hexlify
 import requests as req
 
 from hashlib import sha512
-
+"""
 from google.protobuf import timestamp_pb2
 from gcloud import storage
 
@@ -20,7 +20,7 @@ cblob = client.get_bucket(ID_BUCKET).get_blob('tweetfeedplus_ids.py')
 fp = open(path.join('app', 'tweetfeedplus_ids.py'), 'wb')
 cblob.download_to_file(fp)
 fp.close()
-
+"""
 from tweetfeedplus_ids import id_dict as ids
 
 def generate_url(host, protocol='http', port=80, dir=''):
@@ -43,16 +43,16 @@ abort.mapping[401] = NotValidToken
 abort.mapping[403] = NotAllowed
 
 
-def no_impostors_wanted():
-    if (not session['logged_in']) if 'logged_in' in session.keys() else False:
+def no_impostors_wanted(s):
+    if (not s['logged_in']) if 'logged_in' in s.keys() else True:
         abort(403)
 
 
-#MYIP = '127.0.0.1'
-MYIP = req.get(generate_url('jsonip.com')).json()['ip']
+#API_IP = req.get(generate_url('jsonip.com')).json()['ip']
+API_IP = '130.211.59.105'
 
 app = Flask(__name__, static_url_path="", static_folder='static')
-flask_options = dict(port=80, host='0.0.0.0')
+flask_options = dict(port=88, host='0.0.0.0')
 def run():
     app.secret_key = hexlify(urandom(24))
     app.run(**flask_options)
@@ -92,8 +92,8 @@ def login():
 
 @app.route('/test_api', methods=['GET'])
 def test_api():
-    no_impostors_wanted()
-    return render_template('test_api.html', IP=MYIP)
+    no_impostors_wanted(session)
+    return render_template('test_api.html', API_IP=API_IP)
 
 if __name__ == '__main__':
     run()

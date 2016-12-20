@@ -5,7 +5,7 @@
       <div id="form-inner-wrapper">
         <h2>Test API</h2>
         {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-        <form id="api-test-form" action="{{ url_for('test_api') }}" method=get>
+        <form id="api_test_form" action="{{ url_for('test_api') }}" method=get>
             <dl>
               <dt>URL:
               <dd><input type=text name=url>
@@ -19,18 +19,56 @@
   <footer>
     <script type="text/javascript" charset="utf-8">
       $(document).ready(function() {
-        $('form#api-test-form').submit(function(event) {
-          $.post("http://{{ IP }}:88/api/infer",
-                  JSON.stringify({image: $('form#api-test-form').find('input').eq(0).val()}),
-                  function(data){
-                    var obj = data["data"];
-                    res = $('<div\>').append($('<ul\>'));
-                    for (var key in obj){
-                      res.find('ul').append($('<li\>').append($('<div\>').append($('<h4\>').append(key+': ')).html()+obj[key]));
-                    }
-                    $('#result').html(res.html());
-                  }
-          );
+        ldw = $('<div/>').addClass('loader-wrapper').hide();
+        $('#flash-msg').append(ldw);
+        $('form#api_test_form').submit(function(event){
+          event.preventDefault();
+          event.stopPropagation();
+          jsFlash('processing_ajax','Ajax request is being processed...');
+          $('.loader-wrapper').html('');
+          $('.loader-wrapper').data('loadie-loaded',0);
+          $('.loader-wrapper').show();
+          $('.loader-wrapper').loadie(0);
+          $.ajax({
+            method: "POST",
+            url: "http://{{ API_IP }}:88/api/infer",
+            data: JSON.stringify({image: $('form#api_test_form').find('input').eq(0).val()}),
+            success: function(data){
+                var obj = data["data"];
+                res = $('<div/>').append($('<ul/>'));
+                for (var key in obj){
+                  res.find('ul').append(
+                    $('<li/>').append(
+                      $('<div/>').append(
+                        $('<h4/>').append(
+                          key+': '
+                        )
+                      ).html()+$('<div/>').append(
+                        $('<p/>').append(
+                          '~'+(parseFloat(obj[key])*100).toFixed(2)+'%'
+                        )
+                      ).html()
+                    )
+                  );
+                }
+                $('#result').append(res.html());
+                jsFlash('success_ajax','Ajax request successfully processed!');
+              },
+            fail: function(){
+                jsFlash('error_ajax','Ajax request failed... If this persists, please contact system administrator.');
+            },
+            complete: function(){
+                $('.loader-wrapper').loadie(1);
+                setTimeout(function(){ $('.loader-wrapper').hide(500);}, 2500);
+            }
+          });
+          $('#result').html('');
+          var img = new Image();
+          $('.loader-wrapper').loadie(0.1);
+          img.src = $('form#api_test_form').find('input').eq(0).val();
+          $(img).appendTo('#result');
+          $('#result').show();
+          $('.loader-wrapper').loadie(0.4);
           return false;
         });
       });

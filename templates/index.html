@@ -1,21 +1,38 @@
 {% extends "main_template.html" %}
 {% block content %}
   <header>
-    <h1>API Test Bench</h1>
-    <ul id="nav">
-        {% if not session.logged_in %}
-        <li><a href="{{ url_for('login') }}">log in</a>
-        {% else %}
-        <li><a href="{{ url_for('test_api') }}">test api</a></li>
-        <li><a href="{{ url_for('logout') }}">log out</a></li>
-        {% endif %}
+    <ul id="header-nav">
+      <li>
+        <a href="{{ url_for('index') }}" id="head-main">
+            <img src="{{ url_for('static', filename='HF_Logo_01.png') }}">
+            <h1>API Test Bench</h1>
+        </a>
+      </li>
+      <li>
+        <ul id="nav">
+            {% if not session.logged_in %}
+            <li><a href="{{ url_for('login') }}">log in</a>
+            {% else %}
+            <li><a href="{{ url_for('test_api') }}">test api</a></li>
+            <li><a href="{{ url_for('logout') }}">log out</a></li>
+            {% endif %}
+        </ul>
+      </li>
+      <li id="more-wrapper">
+        <b><a href="#">&#xF0C9;</a></b>
+        <ul id="more-nav">
+          <li>
+            <ul class="subfilter"></ul>
+          </li>
+        </ul>
+      </li>
     </ul>
   </header>
   <div id="flash-msg">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <div class="flash{{ ' '+category }}">{{ message }}</div>
+          <div class="flash{{ ' '+category }}"><a class="flash-message-closer" href="#" onclick="$(this).hide(400).parents('.flash').slideUp(400,function(){$(this).remove();});">&#xF05C;</a>{{ message }}</div>
         {% endfor %}
       {% endif %}
     {% endwith %}

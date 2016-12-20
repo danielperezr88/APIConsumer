@@ -3,7 +3,171 @@
     <title>API Test Bench</title>
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='font-awesome-4.7.0/css/font-awesome.min.css') }}">
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='loadie.js/js/jquery.loadie.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='loadie.js/css/loadie.css') }}">
+    <script type="text/javascript">
+        function jsFlash(cls, msg){
+          $('#flash-msg').append(
+                  $('<div/>')
+                  .addClass('flash')
+                  .addClass(cls)
+                  .append(
+                          $('<a/>')
+                          .addClass('flash-message-closer')
+                          .attr('onclick',"$(this).hide(400).parents('.flash').slideUp(400,function(){$(this).remove();});")
+                          .attr('href','#')
+                          .html('&#xF05C;')
+                  )
+                  .append(msg)
+          );
+        }
+        $(document).ready(function () {
+            var menuString = "#nav",
+                subMenuString = ".subfilter",
+                moreString = "#more-nav",
+                parentString = "header",
+                menu = $(menuString),
+                subMenu = $(subMenuString),
+                more = $(moreString),
+                parent = $(parentString),
+                ww = $(window).width(),
+                smw = more.outerWidth(),
+                window_timeout = 0,
+                menu_timeout = 0;
+
+            function relocateMenuLink(left){
+                clearTimeout(menu_timeout);
+                menu_timeout = setTimeout(function(){$('#more-wrapper > b > a').animate({'left':left}, 1000, "swing");},500);
+            }
+
+            menu.children("li").each(function () {
+                var w = $(this).outerWidth(true);
+                $(this).attr('my-width',w);
+                if (w > smw) smw = w + 20;
+                return smw
+            });
+            more.css('width', smw);
+
+            function contract() {
+                var w = 0,
+                    outerWidth = parent.width() - smw - 230 - parseInt($('#header-nav').css('padding-left'));
+                for (i = 0; i < menu.children("li").size(); i++) {
+                    w += menu.children("li").eq(i).outerWidth(true);
+                    if (w > outerWidth) {
+                        menu.children("li").slice(i)
+                            .detach()
+                            .css('opacity', 0)
+                            .prependTo(subMenuString)
+                            .stop().animate({
+                            'opacity': 1
+                        }, 300);
+                        if(parseInt(subMenu.css('left'))<0) {
+                            subMenu.css('left', -parseInt(subMenu.outerWidth() + 20) + "px");
+                        }else{
+                            relocateMenuLink((parseInt(subMenu.outerWidth()) - 62) / 2);
+                        }
+                        if(parseInt($('#more-wrapper > b > a').eq(0).css('left'))<0){
+                            relocateMenuLink(0);
+                            $('#header-nav').animate({'padding-left':62},1000,'swing',function(){contract()});
+                        }
+                        break;
+                    }
+                }
+            }
+
+            function expand() {
+                var w = 0,
+                    outerWidth = parent.width() - smw - 230 - parseInt($('#header-nav').css('padding-left'));
+                menu.children("li").each(function () {
+                    w += $(this).outerWidth(true);
+                    return w;
+                });
+                for (i = 0; i < subMenu.children("li").size(); i++) {
+                    w += parseInt(subMenu.children("li").eq(i).attr('my-width'));
+                    if (w > outerWidth) {
+                        var a = 0;
+                        while (a < i) {
+                            subMenu.children("li").eq(a)
+                                .css('opacity', 0)
+                                .detach()
+                                .appendTo(menuString)
+                                .stop().animate({
+                                'opacity': 1
+                            }, 300);
+                            a++;
+                        }
+                        if(parseInt(subMenu.css('left'))>=0) {
+                            relocateMenuLink((parseInt(subMenu.outerWidth()) - 62) / 2);
+                        }
+                        if(subMenu.children("li").size()==0){
+                            if(parseInt(subMenu.css('left'))>=0) {
+                                $('#more-wrapper > b > a').eq(0).trigger('click');
+                            }
+                            relocateMenuLink(-63);
+                            $('#header-nav').animate({'padding-left':0},1000,'swing');
+                        }
+                        return;
+                    }
+                }
+                s = subMenu.children("li").size();
+                if(s > 0 && w < outerWidth){
+                    subMenu.children("li").eq(0)
+                        .css('opacity', 0)
+                        .detach()
+                        .appendTo(menuString)
+                        .stop().animate({
+                        'opacity': 1
+                    }, 300);
+                }
+                if(parseInt(subMenu.css('left'))>=0) {
+                    relocateMenuLink((parseInt(subMenu.outerWidth()) - 62) / 2);
+                }
+                if(subMenu.children("li").size()==0){
+                    if(parseInt(subMenu.css('left'))>=0){
+                        $('#more-wrapper > b > a').eq(0).trigger('click');
+                    }
+                    relocateMenuLink(-63);
+                    $('#header-nav').animate({'padding-left':0},1000,'swing');
+                }else{
+                    expand();
+                }
+            }
+            window_timeout = setTimeout(function(){contract();},500);
+
+            $(window).on("resize", function (e) {
+                clearTimeout(window_timeout);
+                window_timeout = setTimeout(function(){
+                    ($(window).width() > ww) ? expand() : contract();
+                    ww = $(window).width();
+                },500);
+            });
+
+            $('#more-wrapper > b > a').attr('isoff',1);
+            $('#more-wrapper > b > a').eq(0).on('click',function(){
+                if(parseInt($('#more-wrapper > b > a').eq(0).attr('isoff'))==1) {
+                    $('#more-nav').show();
+                    subMenu.animate({left: 0}, 1000, "swing");
+                    $('#more-wrapper > b > a').eq(0).attr('isoff',0)
+                            .css('color','#CCC').css('border-right-width',0)
+                            .animate({'border-width':'0 0 1px 0'}, 1000, "swing",function(){
+                                $('#more-wrapper > b > a').eq(0).html('&#xF00D;');
+                            });
+                    relocateMenuLink(((parseInt(subMenu.outerWidth())-62)/2)+"px");
+                } else {
+                    subMenu.animate({left: "-=" + (parseInt(subMenu.outerWidth()) + 21)}, 1000, "swing", function () {
+                        $('#more-nav').hide();
+                    });
+                    $('#more-wrapper > b > a').eq(0).attr('isoff', 1)
+                            .css('color', 'dimgrey').css('border-bottom-width', 0)
+                            .animate({'border-width': '0 1px 0 0'}, 1000, "swing", function () {
+                                $('#more-wrapper > b > a').eq(0).html('&#xF0C9;');
+                            });
+                    relocateMenuLink(0);
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="page {{ request.path.split('/')[-1] }}">
