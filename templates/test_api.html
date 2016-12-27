@@ -9,6 +9,12 @@
             <dl>
               <dt>URL:
               <dd><input type=text name=url>
+              <dt>Model:
+              <dd>
+                <select>
+                  <option value='flowers'>Flowers</option>
+                  <option value='breakhis'>Breast Cancer</option>
+                </select>
               <dd><input type=submit value=Proceed>
             </dl>
         </form>
@@ -32,7 +38,7 @@
           $.ajax({
             method: "POST",
             url: "http://{{ API_IP }}:88/api/infer",
-            data: JSON.stringify({image: $('form#api_test_form').find('input').eq(0).val()}),
+            data: JSON.stringify({image: $('form#api_test_form').find('input').eq(0).val(), model: $('form#api_test_form').find('select').eq(0).val()}),
             success: function(data){
                 var obj = data["data"];
                 res = $('<div/>').append($('<ul/>'));

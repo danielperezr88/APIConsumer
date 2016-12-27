@@ -80,7 +80,10 @@ def login():
     if request.method == 'POST':
         uname = request.form['username']
         if uname in ids.keys():
-            if ids[uname] == sha512(bytes(request.form['password'], encoding='latin1')).hexdigest():
+            pwd = request.form['password']
+            pwd = pwd.encode('latin1')
+            digest = sha512(pwd).hexdigest()
+            if ids[uname] == digest:
                 session['username'] = request.form['username']
                 session['logged_in'] = True
                 return redirect(url_for('index'))
