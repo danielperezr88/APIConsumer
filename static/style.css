@@ -316,10 +316,22 @@ div#form-inner-wrapper {
     padding: 0.5em;
 }
 
+#result ul > li {
+    display: table;
+}
+
 #result ul li > * {
-    display: inline-block;
-    height: 20px;
-    margin: 0.5em;
+    display: table-cell;
+    height: 0.5em;
+    padding: 0.5em;
+}
+
+#result ul li > h4 {
+    vertical-align: middle;
+}
+
+#result ul li > div {
+    width: 0.5em;
 }
 
 #result ul li > p {
