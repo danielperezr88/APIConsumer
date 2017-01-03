@@ -82,7 +82,8 @@ def api_infer():
     no_impostors_wanted(session)
     image = request.form['image']
     model = request.form['model']
-    return req.post(generate_url('localhost', port=88), data=json.dumps(dict(image=image, model=model)))
+    result = req.post(generate_url('localhost', dir=['api', 'infer'], port=88), data=json.dumps(dict(image=image, model=model)))
+    return json.dumps(result.json())
 
 
 @app.route('/login', methods=['GET', 'POST'])
