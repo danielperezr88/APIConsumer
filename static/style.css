@@ -1,4 +1,8 @@
-html, body {min-height:100%;padding:0; margin:0;font-family: sans-serif;}
+@viewport{
+
+}
+
+html, body {min-height:100%;padding:0; margin:0;font-family: 'Raleway',sans-serif;}
 
 @-webkit-keyframes moving-gradient {
     0% { background-position: 0% 100%; }
@@ -87,9 +91,11 @@ html, body {min-height:100%;padding:0; margin:0;font-family: sans-serif;}
 
 a {text-decoration: none;}
 
-#head-main {padding:17px; margin:0; display: inline-block; height: 52px; color: inherit; width: 250px;}
-#head-main > h1 {text-align: right; font-size: 0.75em; width: 250px; max-height: 100%; margin: 0;
+#head-main {padding:17px; margin:0; display: inline-block; height: 52px; color: inherit; width: 250px; color:rgb(63,148,202);}
+#head-main > p {text-align: right; font-size: 0.75em; width: 250px; max-height: 100%; margin: 0;
     margin-right: 100%; margin-left: -5px;}
+#head-main > h1 {font-size: 0.96em; width: 250px; max-height: 30px; margin: 0;
+    margin-bottom: 0; margin-top: 10px;}
 #head-main > img {width: 250px; max-height: 30px;}
 #head-main > * {max-width: 82.08%;}
 
@@ -98,7 +104,8 @@ div.page {padding:86px 0 50px 0; position:absolute; top:0; bottom:0; left:0; rig
 header {
     margin-top:-87px;
     height:86px;
-    background-color: rgba(170,170,170,0.5);
+    *background-color: rgba(170,170,170,0.5);
+    background-color: rgb(24,30,37);
     border-style: solid;
     border-width: 0 0 1px 0;
 }
@@ -129,8 +136,9 @@ header {
     border-style: solid;
     border-width: 0 1px 0 0;
     text-align: center;
-    font-size: 52px;
-    color: dimgrey;
+    font-size: 51px;
+    *color: dimgrey;
+    color:rgb(63,148,202);
     left: -62px;
     z-index: 10001;
     font-family: 'FontAwesome';
@@ -148,9 +156,15 @@ ul.subfilter {
 }
 
 ul.subfilter a, ul.subfilter a:visited {
-    color: #CCC;
+    color: #DDD;
     z-index: 5;
     position: relative;
+    margin: -7.5px -15px -7.5px -15px;
+    padding: 7.5px 15px 7.5px 15px;
+    font-weight: 500;
+}
+
+ul.subfilter > li {
     margin: -7.5px -15px -7.5px -15px;
     padding: 7.5px 15px 7.5px 15px;
 }
@@ -170,7 +184,7 @@ ul.subfilter > li:after {
     text-align: right;
 }
 
-footer {margin-bottom:-50px; height:25px; padding:12.5px;}
+footer {margin-bottom:-50px; height:25px; padding:12.5px; background-color: rgb(24,30,37);}
 
 #flash-msg {
     position: absolute;
@@ -204,11 +218,13 @@ ul#nav > li {
 
 ul#nav > li > a{
     padding: 6px 5px 14px 5px;
-    color: #333;
+    *color: rgb(63,148,202);
+    color: rgb(76, 116, 134);
+    font-weight: 500;
     position: relative;
 }
 
-ul#nav > li > a:hover{background-color: rgba(255,255,255,0.5);}
+ul#nav > li > a:hover, ul.subfilter li:hover{background-color: rgba(255,255,255,0.05);}
 
 ul#nav > li > a:after{
     content:'.';
@@ -246,7 +262,7 @@ div#form-inner-wrapper {
 }
 
 .login form, .new_stream form, .test_api form, .test_api #result {
-    margin-top: 1em;
+    margin: 1em auto 3em auto;
     padding: 0.3em;
     border-style: solid;
     border-width: 1px;
@@ -260,6 +276,7 @@ div#form-inner-wrapper {
 
 .login h2, .new_stream h2, .test_api h2 {
     text-align: center;
+    margin-top: 0;
 }
 
 .login form > dl > dd:last-child, .new_stream form > dl > dd:last-child, .test_api form > dl > dd:last-child {

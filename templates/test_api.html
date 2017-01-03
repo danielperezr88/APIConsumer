@@ -13,7 +13,7 @@
               <dd>
                 <select>
                   <option value='flowers'>Flowers</option>
-                  <option value='breakhis'>Breast Cancer</option>
+                  <option value='breakhis' selected>Breast Cancer</option>
                 </select>
               <dd><input type=submit value=Proceed>
             </dl>
@@ -22,7 +22,8 @@
       </div>
     </div>
   </div>
-  <footer>
+{% endblock %}
+{% block footer_extra %}
     <script type="text/javascript" charset="utf-8">
       $(document).ready(function() {
         ldw = $('<div/>').addClass('loader-wrapper').hide();
@@ -79,5 +80,4 @@
         });
       });
     </script>
-  </footer>
 {% endblock %}

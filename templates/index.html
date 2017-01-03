@@ -4,17 +4,17 @@
     <ul id="header-nav">
       <li>
         <a href="{{ url_for('index') }}" id="head-main">
-            <img src="{{ url_for('static', filename='HF_Logo_01.png') }}">
-            <h1>API Test Bench</h1>
+            <h1>Breast Carcinoma Classifier</h1>
+            <p>for improved cancer prognosis</p>
         </a>
       </li>
       <li>
         <ul id="nav">
             {% if not session.logged_in %}
-            <li><a href="{{ url_for('login') }}">log in</a>
+            <li><a href="{{ url_for('login') }}">Login</a>
             {% else %}
-            <li><a href="{{ url_for('test_api') }}">test api</a></li>
-            <li><a href="{{ url_for('logout') }}">log out</a></li>
+            <li><a href="{{ url_for('test_api') }}">Test</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
             {% endif %}
         </ul>
       </li>
@@ -37,5 +37,8 @@
       {% endif %}
     {% endwith %}
   </div>
-  {% block body %}{% endblock %}
+  {% block body %}
+    <div id="content">
+    </div>
+  {% endblock %}
 {% endblock %}
