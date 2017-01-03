@@ -91,13 +91,12 @@ html, body {min-height:100%;padding:0; margin:0;font-family: 'Raleway',sans-seri
 
 a {text-decoration: none;}
 
-#head-main {padding:17px; margin:0; display: inline-block; height: 52px; color: inherit; width: 250px; color:rgb(63,148,202);}
-#head-main > p {text-align: right; font-size: 0.75em; width: 250px; max-height: 100%; margin: 0;
+#head-main {padding:17px; margin:0; display: inline-block; height: 52px; color: inherit; width: 275px; color:rgb(63,148,202);}
+#head-main > p {text-align: right; font-size: 0.75em; width: 275px; max-height: 100%; margin: 0;
     margin-right: 100%; margin-left: -5px;}
-#head-main > h1 {font-size: 0.96em; width: 250px; max-height: 30px; margin: 0;
-    margin-bottom: 0; margin-top: 10px;}
+#head-main > h1 {font-size: 1.3em; width: 275px; max-height: 30px; margin: 0; margin-top: 5px;}
 #head-main > img {width: 250px; max-height: 30px;}
-#head-main > * {max-width: 82.08%;}
+/*#head-main > * {max-width: 82.08%;}*/
 
 div.page {padding:86px 0 50px 0; position:absolute; top:0; bottom:0; left:0; right:0;}
 
@@ -318,20 +317,16 @@ div#form-inner-wrapper {
 
 #result ul > li {
     display: table;
+    margin-bottom: 0.2em;
 }
 
 #result ul li > * {
     display: table-cell;
-    height: 0.5em;
-    padding: 0.5em;
+    padding: 0 0.5em;
 }
 
 #result ul li > h4 {
     vertical-align: middle;
-}
-
-#result ul li > div {
-    width: 0.5em;
 }
 
 #result ul li > p {
