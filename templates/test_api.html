@@ -25,6 +25,12 @@
 {% endblock %}
 {% block footer_extra %}
     <script type="text/javascript" charset="utf-8">
+
+      var colors = [
+        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
+        "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
+      ];
+
       $(document).ready(function() {
         ldw = $('<div/>').addClass('loader-wrapper').hide();
         $('#flash-msg').append(ldw);
@@ -42,19 +48,65 @@
             data: JSON.stringify({image: $('form#api_test_form').find('input').eq(0).val(), model: $('form#api_test_form').find('select').eq(0).val()}),
             success: function(data){
                 var obj = data["data"];
+
+                $('#result').append($('<canvas/>'));
+
+                var canvas = document.querySelector("canvas");
+                var context = canvas.getContext("2d"),
+                    width = canvas.width,
+                    height = canvas.height;
+                var radius = Math.min(width, height) / 2;
+
+                $(canvas).css('width','100%');
+
+                var arc = d3.arc()
+                    .outerRadius(radius - 10)
+                    .innerRadius(radius - 30)
+                    .padAngle(0.03)
+                    .context(context);
+
+                var pie = d3.pie();
+                pie.value(function(d){return (d==0)? d : d3.scaleLog().domain([1,1.1]).range([0.1,0.2])(d+1);});
+
+                var arcs = pie(Object.values(obj));
+                context.translate(width / 2, height / 2);
+
+                context.globalAlpha = 0.5;
+                arcs.forEach(function(d, i) {
+                  context.beginPath();
+                  arc(d);
+                  context.fillStyle = colors[i];
+                  context.fill();
+                });
+
+                context.globalAlpha = 1;
+                context.beginPath();
+                arcs.forEach(arc);
+                context.lineWidth = 1.5;
+                context.stroke();
                 res = $('<div/>').append($('<ul/>'));
+                var index = 0;
                 for (var key in obj){
                   res.find('ul').append(
                     $('<li/>').append(
                       $('<div/>').append(
+                        $('<div/>')
+                          .css({
+                            width:'25px',
+                            height:'25px',
+                            'background-color':colors[index],
+                            border:'solid 1px',
+                            display: 'inline-block'
+                          })
+                      ).append(
                         $('<h4/>').append(
-                          key+': '
+                          key/*+': '*/
                         )
-                      ).html()+$('<div/>').append(
+                      ).html()/*+$('<div/>').append(
                         $('<p/>').append(
                           '~'+(parseFloat(obj[key])*100).toFixed(2)+'%'
                         )
-                      ).html()
+                      ).html()*/
                     )
                   );
                 }
