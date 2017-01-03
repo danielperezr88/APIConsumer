@@ -94,7 +94,7 @@
                           .css({
                             width:'25px',
                             height:'25px',
-                            'background-color':colors[index],
+                            'background-color':colors[index++],
                             border:'solid 1px',
                             display: 'inline-block'
                           })
@@ -109,6 +109,7 @@
                       ).html()*/
                     )
                   );
+                    index
                 }
                 $('#result').append(res.html());
                 jsFlash('success_ajax','Ajax request successfully processed!');
