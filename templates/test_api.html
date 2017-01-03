@@ -66,7 +66,7 @@
                     .context(context);
 
                 var pie = d3.pie();
-                pie.value(function(d){return (d==0)? d : d3.scaleLog().domain([1,1.1]).range([0.1,0.2])(d+1);});
+                pie.value(function(d){return (d==0)? d : d3.scaleLog().domain([1,1.1]).range([0.1,0.2])(parseFloat(d)*100+1);});
 
                 var arcs = pie(Object.values(obj));
                 context.translate(width / 2, height / 2);
