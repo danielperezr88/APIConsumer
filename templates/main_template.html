@@ -12,17 +12,17 @@
     <script type="text/javascript">
         function jsFlash(cls, msg){
           $('#flash-msg').append(
-                  $('<div/>')
-                  .addClass('flash')
-                  .addClass(cls)
-                  .append(
-                          $('<a/>')
-                          .addClass('flash-message-closer')
-                          .attr('onclick',"$(this).hide(400).parents('.flash').slideUp(400,function(){$(this).remove();});")
-                          .attr('href','#')
-                          .html('&#xF05C;')
-                  )
-                  .append(msg)
+            $('<div/>')
+              .addClass('flash')
+              .addClass(cls)
+              .append(
+                $('<a/>')
+                  .addClass('flash-message-closer')
+                  .attr('onclick',"$(this).hide(400).parents('.flash').slideUp(400,function(){$(this).remove();});")
+                  .attr('href','#')
+                  .html('&#xF05C;')
+              )
+              .append(msg)
           );
         }
         $(document).ready(function () {
@@ -86,7 +86,7 @@
             function contract() {
                 var w = 0,
                     outerWidth = parent.width() - smw - 230 - parseInt($('#header-nav').css('padding-left'));
-                for (i = 0; i < menu.children("li").size(); i++) {
+                for (var i = 0; i < menu.children("li").size(); i++) {
                     w += menu.children("li").eq(i).outerWidth(true);
                     if (w > outerWidth) {
                         menu.children("li").slice(i)

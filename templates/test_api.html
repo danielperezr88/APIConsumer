@@ -3,7 +3,7 @@
   <div id="content">
     <div id="form-outer-wrapper">
       <div id="form-inner-wrapper">
-        <h2>Test API</h2>
+        <!--<h2>Test API</h2>-->
         {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
         <form id="api_test_form" action="{{ url_for('test_api') }}" method=get>
             <dl>
@@ -37,86 +37,86 @@
         $('form#api_test_form').submit(function(event){
           event.preventDefault();
           event.stopPropagation();
-          jsFlash('processing_ajax','Ajax request is being processed...');
+          jsFlash('processing_ajax','Processing...');
           $('.loader-wrapper').html('');
           $('.loader-wrapper').data('loadie-loaded',0);
           $('.loader-wrapper').show();
           $('.loader-wrapper').loadie(0);
           $.ajax({
             method: "POST",
-            url: "http://{{ API_IP }}:88/api/infer",
+            url: "http://{{ API_IP }}/api/infer",
             data: JSON.stringify({image: $('form#api_test_form').find('input').eq(0).val(), model: $('form#api_test_form').find('select').eq(0).val()}),
             success: function(data){
-                var obj = data["data"];
+              var obj = data["data"];
 
-                $('#result').append($('<canvas/>'));
+              $('#result').append($('<canvas/>'));
 
-                var canvas = document.querySelector("canvas");
-                var context = canvas.getContext("2d"),
-                    width = canvas.width,
-                    height = canvas.height;
-                var radius = Math.min(width, height) / 2;
+              var canvas = document.querySelector("canvas");
+              var context = canvas.getContext("2d"),
+                width = canvas.width,
+                height = canvas.height;
+              var radius = Math.min(width, height) / 2;
 
-                $(canvas).css('width','100%');
+              $(canvas).css('width','100%');
 
-                var arc = d3.arc()
-                    .outerRadius(radius - 10)
-                    .innerRadius(radius - 30)
-                    .padAngle(0.03)
-                    .context(context);
+              var arc = d3.arc()
+                .outerRadius(radius - 10)
+                .innerRadius(radius - 30)
+                .padAngle(0.03)
+                .context(context);
 
-                var pie = d3.pie();
-                pie.value(function(d){return (d==0)? d : d3.scaleLog().domain([1,1.1]).range([0.1,0.2])(parseFloat(d)*100+1);});
+              var pie = d3.pie();
+              pie.value(function(d){return (d==0)? d : d3.scaleLog().domain([1,1.1]).range([0.1,0.2])(parseFloat(d)*100+1);});
 
-                var arcs = pie(Object.values(obj));
-                context.translate(width / 2, height / 2);
+              var arcs = pie(Object.values(obj));
+              context.translate(width / 2, height / 2);
 
-                context.globalAlpha = 0.5;
-                arcs.forEach(function(d, i) {
-                  context.beginPath();
-                  arc(d);
-                  context.fillStyle = colors[i];
-                  context.fill();
-                });
-
-                context.globalAlpha = 1;
+              context.globalAlpha = 0.5;
+              arcs.forEach(function(d, i) {
                 context.beginPath();
-                arcs.forEach(arc);
-                context.lineWidth = 1.5;
-                context.stroke();
-                res = $('<div/>').append($('<ul/>'));
-                var index = 0;
-                for (var key in obj){
-                  res.find('ul').append(
-                    $('<li/>').append(
-                      $('<div/>').append(
-                        $('<div/>')
-                          .css({
-                            'background-color':colors[index++],
-                            border:'solid 1px'
-                          })
-                      ).append(
-                        $('<h4/>').append(
-                          key/*+': '*/
-                        )
-                      ).html()/*+$('<div/>').append(
-                        $('<p/>').append(
-                          '~'+(parseFloat(obj[key])*100).toFixed(2)+'%'
-                        )
-                      ).html()*/
-                    )
-                  );
-                    index
-                }
-                $('#result').append(res.html());
-                jsFlash('success_ajax','Ajax request successfully processed!');
-              },
+                arc(d);
+                context.fillStyle = colors[i];
+                context.fill();
+              });
+
+              context.globalAlpha = 1;
+              context.beginPath();
+              arcs.forEach(arc);
+              context.lineWidth = 1.5;
+              context.stroke();
+              res = $('<div/>').append($('<ul/>'));
+              var index = 0;
+              for (var key in obj){
+                res.find('ul').append(
+                  $('<li/>').append(
+                    $('<div/>').append(
+                      $('<div/>')
+                        .css({
+                          'background-color':colors[index++],
+                          border:'solid 1px'
+                        })
+                    ).append(
+                      $('<h4/>').append(
+                        key/*+': '*/
+                      )
+                    ).html()/*+$('<div/>').append(
+                      $('<p/>').append(
+                        '~'+(parseFloat(obj[key])*100).toFixed(2)+'%'
+                      )
+                    ).html()*/
+                  )
+                );
+                  index
+              }
+              $('#result').append(res.html());
+              jsFlash('success_ajax','Success');
+            },
             fail: function(){
-                jsFlash('error_ajax','Ajax request failed... If this persists, please contact system administrator.');
+              jsFlash('error_ajax','Ajax request failed... If this persists, please contact system administrator.');
             },
             complete: function(){
-                $('.loader-wrapper').loadie(1);
-                setTimeout(function(){ $('.loader-wrapper').hide(500);}, 2500);
+              $('.loader-wrapper').loadie(1);
+              setTimeout(function(){ $('.loader-wrapper').hide(500);}, 2500);
             }
           });
           $('#result').html('');

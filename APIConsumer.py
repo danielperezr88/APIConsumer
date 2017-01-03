@@ -9,6 +9,8 @@ import requests as req
 
 from hashlib import sha512
 
+import json
+
 from google.protobuf import timestamp_pb2
 from gcloud import storage
 
@@ -73,6 +75,14 @@ def logout():
     del session['username']
     session['logged_in'] = False
     return redirect(url_for('index'))
+
+
+@app.route('/api/infer', methods=['POST'])
+def api_infer():
+    no_impostors_wanted(session)
+    image = request.form['image']
+    model = request.form['model']
+    return req.post(generate_url('localhost', port=88), data=json.dumps(dict(image=image, model=model)))
 
 
 @app.route('/login', methods=['GET', 'POST'])
