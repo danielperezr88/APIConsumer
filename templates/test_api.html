@@ -48,7 +48,7 @@
             data: "image=" + encodeURIComponent($('form#api_test_form').find('input').eq(0).val()) +
                 "&model=" + encodeURIComponent($('form#api_test_form').find('select').eq(0).val()),
             success: function(data){
-              var obj = data["data"];
+              var obj = JSON.parse(data)["data"];
 
               $('#result').append($('<canvas/>'));
 
