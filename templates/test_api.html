@@ -42,13 +42,21 @@
           $('.loader-wrapper').data('loadie-loaded',0);
           $('.loader-wrapper').show();
           $('.loader-wrapper').loadie(0);
-          $.ajax({
-            method: "POST",
-            url: "http://{{ API_IP }}/api/infer",
-            data: "image=" + encodeURIComponent($('form#api_test_form').find('input').eq(0).val()) +
-                "&model=" + encodeURIComponent($('form#api_test_form').find('select').eq(0).val()),
-            success: function(data){
-              var obj = JSON.parse(data)["data"];
+          
+          var xhttp;
+          if(window.XMLHttpRequest){
+            xhttp = new XMLHttpRequest();
+          } else {
+            xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+          
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+
+              $('.loader-wrapper').loadie(1);
+              setTimeout(function(){ $('.loader-wrapper').hide(500);}, 2500);
+
+              var obj = JSON.parse(this.responseText)["data"];
 
               $('#result').append($('<canvas/>'));
 
@@ -73,6 +81,7 @@
               context.translate(width / 2, height / 2);
 
               context.globalAlpha = 0.5;
+              
               arcs.forEach(function(d, i) {
                 context.beginPath();
                 arc(d);
@@ -107,19 +116,17 @@
                     ).html()*/
                   )
                 );
-                  index
               }
               $('#result').append(res.html());
               jsFlash('success_ajax','Success');
-            },
-            fail: function(){
-              jsFlash('error_ajax','Ajax request failed... If this persists, please contact system administrator.');
-            },
-            complete: function(){
-              $('.loader-wrapper').loadie(1);
-              setTimeout(function(){ $('.loader-wrapper').hide(500);}, 2500);
+
+            } else if (this.readyState == 4 && this.status != 200){
+              jsFlash('error_ajax',`Request failed ({this.status})... If this persists, please contact system administrator.`);
+            } else {
+              console.log('complete');
             }
-          });
+          };
+
           $('#result').html('');
           var img = new Image();
           $('.loader-wrapper').loadie(0.1);
@@ -127,6 +134,11 @@
           $(img).appendTo('#result');
           $('#result').show();
           $('.loader-wrapper').loadie(0.4);
+
+          xhttp.open("POST","/api/infer",true);
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.send('image='+encodeURIComponent($('form#api_test_form').find('input').eq(0).val())+"&model="+encodeURIComponent($('form#api_test_form').find('select').eq(0).val()))
+
           return false;
         });
       });
