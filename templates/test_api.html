@@ -58,7 +58,7 @@
 
               var obj = JSON.parse(this.responseText)["data"];
 
-              /*$('#result').append($('<canvas/>'));
+              $('#result').append($('<p/>').append('PREDICTIONS')).append($('<canvas/>'));
 
               var canvas = document.querySelector("canvas");
               var context = canvas.getContext("2d"),
@@ -76,8 +76,12 @@
 
               var pie = d3.pie();
               pie.value(function(d){return (d==0)? d : d3.scaleLog().domain([1,1.1]).range([0.1,0.2])(parseFloat(d)*100+1);});
+              
+              var vals = Object.keys(obj).map(function(key) {
+                return obj[key];
+              });
 
-              var arcs = pie(Object.values(obj));
+              var arcs = pie(vals);
               context.translate(width / 2, height / 2);
 
               context.globalAlpha = 0.5;
@@ -93,24 +97,24 @@
               context.beginPath();
               arcs.forEach(arc);
               context.lineWidth = 1.5;
-              context.stroke();*/
-              res = $('<div/>').append($('<p/>').append('PREDICTIONS')).append($('<ul/>'));
+              context.stroke();
+              res = $('<div/>').append($('<ul/>'));
               var index = 0;
               for (var key in obj){
                 res.find('ul').append(
                   $('<li/>').append(
                     $('<div/>')
-                      /*.append($('<div/>')
+                      .append($('<div/>')
                         .css({
                           'background-color':colors[index++],
                           border:'solid 1px'
                         })
-                      )*/
-                      .append($('<h4/>').append(key+': ')).html()+$('<div/>').append(
+                      )
+                      .append($('<h4/>').append(key/*+': '*/)).html()/*+$('<div/>').append(
                         $('<p/>').append(
                           '~'+(parseFloat(obj[key])*100).toFixed(2)+'%'
                         )
-                      ).html()
+                      ).html()*/
                   )
                 );
               }
