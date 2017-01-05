@@ -256,7 +256,7 @@ div#form-inner-wrapper {
     right: 0;
     bottom: 0;
     margin: auto;
-    width: 250px;
+    width: 270px;
     height: 90%;
 }
 
@@ -320,6 +320,12 @@ div#form-inner-wrapper {
 .new_stream form > dl > dt,
 .test_api form > dl > dt {
     margin-bottom: 0.3em;
+}
+
+#result > p {
+    font-size: 0.9em;
+    text-align: center;
+    font-weight: 600;
 }
 
 #result ul {
