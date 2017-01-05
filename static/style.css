@@ -260,6 +260,18 @@ div#form-inner-wrapper {
     height: 90%;
 }
 
+.index #content::after {
+    content: "";
+    background: url('slide.jpg?');
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+}
+
 .login form, .new_stream form, .test_api form, .test_api #result {
     margin: 1em auto 3em auto;
     padding: 0.3em;
