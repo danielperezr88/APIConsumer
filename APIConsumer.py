@@ -39,7 +39,7 @@ logfilename = inspect.getfile(inspect.currentframe()) + ".log"
 logging.basicConfig(filename=logfilename, level=logging.INFO, format='%(asctime)s %(message)s')
 logging.info("Started")
 
-filepath = path.join(path.basename(path.dirname(path.realpath(__file__))), 'tweetfeedplus_ids.py')
+filepath = path.join(path.dirname(path.realpath(__file__)), 'tweetfeedplus_ids.py')
 if not path.exists(filepath):
     client = storage.Client()
     cblob = client.get_bucket(lookup_bucket(client, ID_BUCKET)).get_blob('tweetfeedplus_ids.py')
