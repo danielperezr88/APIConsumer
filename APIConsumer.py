@@ -2,8 +2,9 @@ from flask import Flask, abort, flash, redirect, render_template, session, url_f
 
 import werkzeug.exceptions as ex
 
-from os import urandom, path
+from os import urandom, path, getpid
 from binascii import hexlify
+import inspect
 
 import requests as req
 
@@ -14,11 +15,27 @@ import json
 from google.protobuf import timestamp_pb2
 from gcloud import storage
 
-ID_BUCKET = 'ids-hf'
+ID_BUCKET = 'ids'
+
+
+def lookup_bucket(cli, prefix):
+    for bucket in cli.list_buckets():
+        if bucket.startswith(prefix):
+            return bucket
+
+
+def save_pid():
+    """Save pid into a file: filename.pid."""
+    pidfilename = inspect.getfile(inspect.currentframe()) + ".pid"
+    f = open(pidfilename, 'w')
+    f.write(str(getpid()))
+    f.close()
+
+save_pid()
 
 # Descargamos el dataset de cancer del bucket de datasets
 client = storage.Client()
-cblob = client.get_bucket(ID_BUCKET).get_blob('tweetfeedplus_ids.py')
+cblob = client.get_bucket(lookup_bucket(client, ID_BUCKET)).get_blob('tweetfeedplus_ids.py')
 fp = open(path.join('app', 'tweetfeedplus_ids.py'), 'wb')
 cblob.download_to_file(fp)
 fp.close()
