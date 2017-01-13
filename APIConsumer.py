@@ -5,6 +5,7 @@ import werkzeug.exceptions as ex
 from os import urandom, path, getpid
 from binascii import hexlify
 import inspect
+import logging
 
 import requests as req
 
@@ -20,8 +21,9 @@ ID_BUCKET = 'ids'
 
 def lookup_bucket(cli, prefix):
     for bucket in cli.list_buckets():
-        if bucket.startswith(prefix):
-            return bucket
+        if bucket.name.startswith(prefix):
+            return bucket.name
+    logging.error("Id Bucket not found")
 
 
 def save_pid():
@@ -33,12 +35,17 @@ def save_pid():
 
 save_pid()
 
-# Descargamos el dataset de cancer del bucket de datasets
-client = storage.Client()
-cblob = client.get_bucket(lookup_bucket(client, ID_BUCKET)).get_blob('tweetfeedplus_ids.py')
-fp = open(path.join('app', 'tweetfeedplus_ids.py'), 'wb')
-cblob.download_to_file(fp)
-fp.close()
+logfilename = inspect.getfile(inspect.currentframe()) + ".log"
+logging.basicConfig(filename=logfilename, level=logging.INFO, format='%(asctime)s %(message)s')
+logging.info("Started")
+
+filepath = path.join(path.basename(path.dirname(path.realpath(__file__))), 'tweetfeedplus_ids.py')
+if not path.exists(filepath):
+    client = storage.Client()
+    cblob = client.get_bucket(lookup_bucket(client, ID_BUCKET)).get_blob('tweetfeedplus_ids.py')
+    fp = open(filepath, 'wb')
+    cblob.download_to_file(fp)
+    fp.close()
 
 from tweetfeedplus_ids import id_dict as ids
 
