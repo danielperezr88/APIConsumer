@@ -10,12 +10,16 @@
       </li>
       <li>
         <ul id="nav">
+          {#
             {% if not session.logged_in %}
             <li><a href="{{ url_for('login') }}">Login</a>
             {% else %}
+          #}
             <li><a href="{{ url_for('test_api') }}">Test</a></li>
+          {#
             <li><a href="{{ url_for('logout') }}">Logout</a></li>
             {% endif %}
+          #}
         </ul>
       </li>
       <li id="more-wrapper">
