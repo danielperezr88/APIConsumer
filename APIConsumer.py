@@ -2,7 +2,7 @@ from flask import Flask, redirect, render_template, url_for, request#, abort, fl
 
 #import werkzeug.exceptions as ex
 
-from os import urandom, getpid#, path
+from os import urandom, getpid, environ#, path
 from binascii import hexlify
 import inspect
 import logging
@@ -78,7 +78,7 @@ API_IP = req.get(generate_url('jsonip.com')).json()['ip']
 #API_IP = '130.211.59.105'
 
 app = Flask(__name__, static_url_path="", static_folder='static')
-flask_options = dict(port=80, host='0.0.0.0')
+flask_options = dict(port=int(environ.get('PORT', 80)), host='0.0.0.0')
 def run():
     app.secret_key = hexlify(urandom(24))
     app.run(**flask_options)
