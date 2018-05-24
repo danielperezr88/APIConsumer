@@ -136,7 +136,7 @@
           $('#result').show();
           $('.loader-wrapper').loadie(0.4);
 
-          xhttp.open("POST","/api/infer",true);
+          xhttp.open("POST","{{ API_ENDPOINT }}",true);
           xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
           xhttp.send('image='+encodeURIComponent($('form#api_test_form').find('input').eq(0).val())+"&model="+encodeURIComponent($('form#api_test_form').find('select').eq(0).val()))
 

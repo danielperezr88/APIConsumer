@@ -8,6 +8,7 @@ import inspect
 import logging
 
 import requests as req
+from urllib import parse
 
 #from hashlib import sha512
 
@@ -74,11 +75,20 @@ def generate_url(host, protocol='http', port=80, dir=''):
 #        abort(403)
 
 
-API_IP = req.get(generate_url('jsonip.com')).json()['ip']
-#API_IP = '130.211.59.105'
+IP = req.get(generate_url('jsonip.com')).json()['ip']
+
+DEFAULT_PORT = 80
+PORT = int(environ.get('PORT', DEFAULT_PORT))
+
+API_HOST = parse(request.base_url).hostname.split('.')[0] + '-api.herokuapp.com'
+API_PROTOCOL = 'https'
+API_PORT = 88 if PORT == DEFAULT_PORT else 80
+API_ENDPOINT = generate_url(API_HOST, protocol=API_PROTOCOL, dir=['api', 'infer'], port=API_PORT)
+#API_HOST = IP
+#API_HOST = '130.211.59.105'
 
 app = Flask(__name__, static_url_path="", static_folder='static')
-flask_options = dict(port=int(environ.get('PORT', 80)), host='0.0.0.0')
+flask_options = dict(port=PORT, host='0.0.0.0')
 def run():
     app.secret_key = hexlify(urandom(24))
     app.run(**flask_options)
@@ -106,7 +116,7 @@ def api_infer():
     #no_impostors_wanted(session)
     image = request.form['image']
     model = request.form['model']
-    result = req.post(generate_url('localhost', dir=['api', 'infer'], port=88), data=json.dumps(dict(image=image, model=model)))
+    result = req.post(API_ENDPOINT, data=json.dumps(dict(image=image, model=model)))
     return json.dumps(result.json())
 
 
@@ -131,7 +141,7 @@ def api_infer():
 @app.route('/test_api', methods=['GET'])
 def test_api():
     #no_impostors_wanted(session)
-    return render_template('test_api.html', API_IP=API_IP)
+    return render_template('test_api.html', API_ENDPOINT=API_ENDPOINT)
 
 @app.after_request
 def apply_caching(response):
